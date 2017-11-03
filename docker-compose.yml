@@ -12,6 +12,26 @@ services:
         ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       networks:
         - elk
+  mysql:
+    image: mysql
+    container_name: test-mysql
+    ports:
+      - 6603:3306
+    environment:
+       - MYSQL_ROOT_PASSWORD=root
+       - MYSQL_USER=user
+       - MYSQL_PASSWORD=password
+       - MYSQL_MY_DATABASE=my-database
+    volumes:
+      - /media/mysql:/var/lib/mysql
+
+  mongo:
+    command: mongod
+    image: mongo:3.2.0
+    ports:
+      - "27100:27017" # map port to none standard port, to avoid conflicts with locally installed mongodb. 
+    volumes:
+      - /media/mongo:/var/run/docker.sock
 
   web:
     build: ./web
@@ -19,7 +39,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - "DOCKER_MACHINE_IP=${DOCKER_MACHINE_IP}"
+      - "DOCKER_MACHINE_IP=0.0.0.0"
     depends_on:
       - elasticsearch
 networks:
