@@ -29,7 +29,12 @@ services:
        - MYSQL_PASSWORD=password
        - MYSQL_MY_DATABASE=my-database
     volumes:
-      - /Users/vyacheslavtykhonov/mysql:/var/lib/mysql
+      - /data/db/mysql:/var/lib/mysql
+
+  redis:
+    build: redis/
+    ports:
+      - "6379:6379"
 
   mongo:
     command: mongod
@@ -37,7 +42,7 @@ services:
     ports:
       - "27100:27017" # map port to none standard port, to avoid conflicts with locally installed mongodb. 
     volumes:
-      - /Users/vyacheslavtykhonov/mongo:/var/run/docker.sock
+      - /data/db/mongo:/data
 
   web:
     build: ./web
